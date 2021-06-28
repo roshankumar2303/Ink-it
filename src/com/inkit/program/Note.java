@@ -4,43 +4,33 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class Note {
+    // Unique ID
+    Integer uniqueID;
     String title;
     String text;
     ArrayList<String> labels;
     Hashtable<String, Boolean> toDo;
 
     /* -------------------- Setters and Getters -------------------- */
-    public String getTitle() {
-        return title;
-    }
+    public Integer getUniqueID() { return uniqueID; }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    public void setUniqueID(Integer uniqueID) { this.uniqueID = uniqueID; }
 
-    public String getText() {
-        return text;
-    }
+    public String getTitle() { return title; }
 
-    public void setText(String text) {
-        this.text = text;
-    }
+    public void setTitle(String title) { this.title = title; }
 
-    public ArrayList<String> getLabels() {
-        return labels;
-    }
+    public String getText() { return text; }
 
-    public void setLabels(ArrayList<String> labels) {
-        this.labels = labels;
-    }
+    public void setText(String text) { this.text = text; }
 
-    public Hashtable<String, Boolean> getToDo() {
-        return toDo;
-    }
+    public ArrayList<String> getLabels() { return labels; }
 
-    public void setToDo(Hashtable<String, Boolean> toDo) {
-        this.toDo = toDo;
-    }
+    public void setLabels(ArrayList<String> labels) { this.labels = labels; }
+
+    public Hashtable<String, Boolean> getToDo() { return toDo; }
+
+    public void setToDo(Hashtable<String, Boolean> toDo) { this.toDo = toDo; }
 
     @Override
     public String toString() {

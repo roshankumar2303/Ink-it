@@ -4,66 +4,71 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Scanner;
 
-/* com.inkit.program.NoteOperations - Used to perform operations on Note objects */
+/**
+ * This class is used to perform operations on Note objects
+ */
 public class NoteOperations {
     Scanner inp = new Scanner(System.in);
 
-    /* NoteOperations.createNote() - This method creates a new note and returns it */
+    /**
+     * This method creates a new note and returns it
+     * [AN IDEA] Maybe make these methods "static" as well ?? -- Roshan
+     * @return A note object
+     */
     Note createNote() {
         Note newNote = new Note();
         String choice;
 
+        // [INCOMPLETE] GENERATE uniqueID FOR THE NEW NOTE
+
+        // Reading Title of the note
         System.out.print("-- TITLE: ");
         newNote.setTitle(inp.nextLine());
 
+        // Reading Content of the note
         System.out.println("-- CONTENT ------------------------------");
         newNote.setText(inp.nextLine());
 
+        // Reading To-Do list of the note
         System.out.print("-- TO-DO (Y/n): ");
         if((inp.nextLine()).equalsIgnoreCase("Y")) {
             Hashtable<String, Boolean> toDo = new Hashtable<>();
 
             choice = "y";
             while (choice.equalsIgnoreCase("Y")) {
-                System.out.print("---- ");
+                System.out.print("* ");
                 String item = inp.nextLine();
 
                 toDo.put(item, false);
 
-                System.out.print("-- Add Item (Y/n): ");
+                System.out.print("|- Add Item (Y/n): ");
                 choice = inp.nextLine();
             }
 
             newNote.setToDo(toDo);
         }
 
+        // Labels of the note
         System.out.print("-- LABELS (Y/n): ");
         if((inp.nextLine()).equalsIgnoreCase("Y")) {
-            ArrayList<String> labels = new ArrayList<>();
+            ArrayList<String> newNoteLabels = new ArrayList<>();
 
-            choice = "y";
-            while (choice.equalsIgnoreCase("Y")) {
-                System.out.print("---- ");
-                String label = inp.nextLine();
+            // [INCOMPLETE] Create and add new labels
 
-                labels.add(label);
 
-                System.out.print("-- Add Another (Y/n): ");
-                choice = inp.nextLine();
-            }
+            // Choose labels from the existing ones
+            newNoteLabels.addAll(
+                    Labels.chooseLabels(newNote.getUniqueID())
+            );
 
-            newNote.setLabels(labels);
+            newNote.setLabels(newNoteLabels);
         }
 
         System.out.println("-- NOTE CREATED ------------------------------");
         return newNote;
     }
 
-    /* NoteOperations.modifyNote() - This method helps in modifying the note and returns it */
-
-    // FOR TESTING
-    public static void main(String[] args) {
-        Note note1 = new NoteOperations().createNote();
-
-    }
+    /*
+     * [INCOMPLETE] This method helps in modifying the given note
+     */
 }
