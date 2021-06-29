@@ -5,21 +5,28 @@ import java.util.Hashtable;
 
 public class Labels {
     // KEY: String -> Label
-    // VAL: Integer[] -> uniqueIDs of all the notes under that label
-    static Hashtable<String, Integer[]> allLabels;
+    // VAL: String[] -> Titles of all the notes under that label
+    static LinkedHashMap<String, ArrayList<String>> allLabels;
 
     static {
         // [INCOMPLETE] This static block runs for the first time when "Labels" class has been invoked through a static method
         // [INCOMPLETE] Retrieve all the labels from the file and store it in "allLabels"
-        // Hashtable is serializable. Not sure about Integer[] tho. But I guess we can write Hashtable object to the file, and it can be retrieved -- Roshan
-        allLabels = new Hashtable<>(); // --->> JUST A PLACEHOLDER FOR NOW
+
+        /* TEMP */
+        allLabels = new LinkedHashMap<>();
+        allLabels.put("School", new ArrayList<String>(){
+            {
+                add("HM");
+                add("SM");
+            }
+        });
 
     }
 
     /**
-     * This static method helps in choosing labels from pre-existing labels stored in a file as a {@code Hashtable} object.
-     * @param uniqueID The unique ID of a note whose labels are being chosen
-     * @return  ArrayList of chosen Labels
+     * This static method helps in choosing labels for a new note from pre-existing labels stored in a file as a {@code Hashtable} object.
+     * @param title Title of the new note which is being created
+     * @return label - String containing the chosen Label
      */
     public static ArrayList<String> chooseLabels(Integer uniqueID) {
         ArrayList<String> selectedLabels = new ArrayList<>();
@@ -36,5 +43,18 @@ public class Labels {
 
         // Returning Selected Labels
         return selectedLabels;
+    }
+
+    /**
+     * This static method updates {@code allLabels} to include the newly created label for the newly created note
+     * @param label The new label which has been created
+     * @param title The title of the new note which has been created
+     */
+    public static void updateLabels(String label, String title) {
+        allLabels.put(label, new ArrayList<String>(){
+            {
+                add(title);
+            }
+        });
     }
 }

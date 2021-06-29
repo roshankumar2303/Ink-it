@@ -1,21 +1,14 @@
 package com.inkit.program;
 
-import java.util.ArrayList;
 import java.util.Hashtable;
 
 public class Note {
-    // Unique ID
-    Integer uniqueID;
     String title;
     String text;
-    ArrayList<String> labels;
+    String labels;
     Hashtable<String, Boolean> toDo;
 
     /* -------------------- Setters and Getters -------------------- */
-    public Integer getUniqueID() { return uniqueID; }
-
-    public void setUniqueID(Integer uniqueID) { this.uniqueID = uniqueID; }
-
     public String getTitle() { return title; }
 
     public void setTitle(String title) { this.title = title; }
@@ -24,9 +17,9 @@ public class Note {
 
     public void setText(String text) { this.text = text; }
 
-    public ArrayList<String> getLabels() { return labels; }
+    public String getLabels() { return labels; }
 
-    public void setLabels(ArrayList<String> labels) { this.labels = labels; }
+    public void setLabels(String labels) { this.labels = labels; }
 
     public Hashtable<String, Boolean> getToDo() { return toDo; }
 
@@ -36,7 +29,7 @@ public class Note {
     public String toString() {
         return  "---------- " + title + " ----------\n" +
                 text + "\n" +
-                labels + "\n" +
-                toDo + "\n";
+                toDo + "\n" +
+                "\nThis note falls under:" + labels + "\n";
     }
 }

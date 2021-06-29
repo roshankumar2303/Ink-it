@@ -1,6 +1,5 @@
 package com.inkit.program;
 
-import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Scanner;
 
@@ -8,14 +7,14 @@ import java.util.Scanner;
  * This class is used to perform operations on Note objects
  */
 public class NoteOperations {
-    Scanner inp = new Scanner(System.in);
 
     /**
-     * This method creates a new note and returns it
-     * [AN IDEA] Maybe make these methods "static" as well ?? -- Roshan
+     * This static method creates a new note and returns it
      * @return A note object
      */
-    Note createNote() {
+    public static Note createNote() {
+        Scanner inp = new Scanner(System.in);
+
         Note newNote = new Note();
         String choice;
 
@@ -51,17 +50,23 @@ public class NoteOperations {
         // Labels of the note
         System.out.print("-- LABELS (Y/n): ");
         if((inp.nextLine()).equalsIgnoreCase("Y")) {
-            ArrayList<String> newNoteLabels = new ArrayList<>();
+            String newNoteLabel = null;
 
-            // [INCOMPLETE] Create and add new labels
+            System.out.print("A. Create new Label\nB. Choose from existing ones\nYour choice: ");
+            if((inp.nextLine()).equalsIgnoreCase("A")) {
+                // Read new label from the user
+                System.out.print("Enter the label: ");
+                newNoteLabel = inp.nextLine();
 
+                // Update allLabels with the new label
+                Labels.updateLabels(newNoteLabel, newNote.getTitle());
+            }
+            else {
+                // Choose label from the existing ones
+                newNoteLabel = Labels.chooseLabels(newNote.getTitle());
+            }
 
-            // Choose labels from the existing ones
-            newNoteLabels.addAll(
-                    Labels.chooseLabels(newNote.getUniqueID())
-            );
-
-            newNote.setLabels(newNoteLabels);
+            newNote.setLabels(newNoteLabel);
         }
 
         System.out.println("-- NOTE CREATED ------------------------------");
