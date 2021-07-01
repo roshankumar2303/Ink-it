@@ -4,7 +4,7 @@ import java.util.Hashtable;
 
 public class Note {
     String title;
-    String text;
+    String content;
     String labels;
     Hashtable<String, Boolean> toDo;
 
@@ -13,9 +13,9 @@ public class Note {
 
     public void setTitle(String title) { this.title = title; }
 
-    public String getText() { return text; }
+    public String getContent() { return content; }
 
-    public void setText(String text) { this.text = text; }
+    public void setContent(String content) { this.content = content; }
 
     public String getLabels() { return labels; }
 
@@ -27,9 +27,20 @@ public class Note {
 
     @Override
     public String toString() {
-        return  "---------- " + title + " ----------\n" +
-                text + "\n" +
-                toDo + "\n" +
-                "\nThis note falls under:" + labels + "\n";
+        return  /* TITLE */
+                ConsoleUI.line(70) +
+                ConsoleUI.textWrap(title, 70) +
+                ConsoleUI.line(70) +
+
+                /* NOTE CONTENT */
+                ConsoleUI.textWrap(content, 70) +
+
+                /* TO-DO LIST */
+                "\nTo-Do:\n" +
+                ConsoleUI.formatTodoList(toDo) +
+
+                /* LABELS */
+                "\nLABELS: " + labels + "\n" +
+                ConsoleUI.line(70);
     }
 }
