@@ -35,7 +35,7 @@ public class Labels {
         ArrayList<String> selectedLabels = new ArrayList<>();
 
         // Printing all the labels for the user to choose
-        int i = 0;
+        int i = 1;
         System.out.println("-- CHOOSE LABELS FROM THE BELOW ONES ----------");
         for(String label: allLabels.keySet()) {
             System.out.println((i++) + " --> " + label);
