@@ -1,8 +1,12 @@
 package com.inkit.program;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
+import java.util.LinkedHashMap;
+import java.util.Scanner;
 
+/**
+ * {@code Labels} class provides methods to operate on Note labels
+ */
 public class Labels {
 
     /**
@@ -31,8 +35,7 @@ public class Labels {
      * @param noteTitle Title of the new note which is being created
      * @return label - String containing the chosen Label
      */
-    public static ArrayList<String> chooseLabels(Integer uniqueID) {
-        ArrayList<String> selectedLabels = new ArrayList<>();
+    public static String chooseLabels(String noteTitle) {
 
         // Printing all the labels for the user to choose
         int i = 1;
@@ -41,11 +44,19 @@ public class Labels {
             System.out.println((i++) + " --> " + label);
         }
 
-        // [INCOMPLETE] Choosing labels, and adding those to selectedLabels, and Updating allLabels to include uniqueID of the current new note
+        // Choosing the label
+        String label;
+        System.out.println("Enter your choice of label : ");
+        Scanner sc = new Scanner(System.in);
+        label = sc.nextLine();
 
+        // Update Titles array corresponding to the table
+        ArrayList<String> linkedNotes = allLabels.get(label);
+        linkedNotes.add(noteTitle);
+        allLabels.put(label, linkedNotes);
 
-        // Returning Selected Labels
-        return selectedLabels;
+        // Returning Label
+        return label;
     }
 
     /**
