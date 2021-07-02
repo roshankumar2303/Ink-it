@@ -1,12 +1,37 @@
 package com.inkit.program;
 
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.*;
 
 /**
  * ConsoleUI class provides methods to present content on the Terminal in a better way
  */
-public class ConsoleUI {
+public class TextUI {
+
+    static Scanner inp = new Scanner(System.in);
+
+    /**
+     * ANSI ESCAPE CODES - COLORING
+     * <p>Reference: https://www.lihaoyi.com/post/BuildyourownCommandLinewithANSIescapecodes.html</p>
+     */
+    static final String ANSI_RESET = "\u001B[0m";
+
+    static final String ANSI_BLACK = "\u001B[30m";
+    static final String ANSI_RED = "\u001B[31m";
+    static final String ANSI_GREEN = "\u001B[32m";
+    static final String ANSI_YELLOW = "\u001B[33m";
+    static final String ANSI_BLUE = "\u001B[34m";
+    static final String ANSI_PURPLE = "\u001B[35m";
+    static final String ANSI_CYAN = "\u001B[36m";
+    static final String ANSI_WHITE = "\u001B[37m";
+
+    static final String ANSI_BLACK_BACKGROUND = "\u001B[40m";
+    static final String ANSI_RED_BACKGROUND = "\u001B[41m";
+    static final String ANSI_GREEN_BACKGROUND = "\u001B[42m";
+    static final String ANSI_YELLOW_BACKGROUND = "\u001B[43m";
+    static final String ANSI_BLUE_BACKGROUND = "\u001B[44m";
+    static final String ANSI_PURPLE_BACKGROUND = "\u001B[45m";
+    static final String ANSI_CYAN_BACKGROUND = "\u001B[46m";
+    static final String ANSI_WHITE_BACKGROUND = "\u001B[47m";
 
     /**
      * Returns the wrapped sentence with the specified wrap-width
@@ -50,18 +75,17 @@ public class ConsoleUI {
      * @param toDo To-Do list as a Hashtable
      * @return String which contains a print-able To-Do list
      */
-    public static String formatTodoList(Hashtable<String, Boolean> toDo) {
+    public static String formatTodoList(LinkedHashMap<String, Boolean> toDo) {
         StringBuilder formatted = new StringBuilder();
 
         try {
-            Enumeration<String> td = toDo.keys();
-            while (td.hasMoreElements()) {
+            Set<String> todoItems = toDo.keySet();
+            for(String item: todoItems) {
                 // Adding the to-do list item
-                String currItem = td.nextElement();
-                formatted.append(currItem).append(" - ");
+                formatted.append(item).append(" - ");
 
                 // Adding the status of the to-do list item
-                if (toDo.get(currItem))
+                if (toDo.get(item))
                     formatted.append("✔");
                 else
                     formatted.append("❌");
@@ -81,8 +105,26 @@ public class ConsoleUI {
      * @param len Length of the line
      * @return The dashed line
      */
-    public static String line(int len) {
+    public static String getLine(int len) {
         return new String(new char[len]).replace('\0', '=') + "\n";
+    }
+
+    /**
+     * Draws/prints a dashed line, with the specified length. The cursor is then moved to the newline
+     * @param len Length of the line
+     */
+    public static void drawLine(int len) {
+        System.out.println(new String(new char[len]).replace('\0', '='));
+    }
+
+    /**
+     * Ask the user a YES (or) NO question. Reads the user's choice and returns it as a boolean
+     * @param question The question being asked
+     * @return User's choice as a boolean value
+     */
+    public static boolean yesOrNo(String question) {
+        System.out.print(question + " " + ANSI_CYAN_BACKGROUND + ANSI_BLACK + " (Y/n) " + ANSI_RESET + " : ");
+        return (inp.nextLine()).equalsIgnoreCase("Y");
     }
 
 }

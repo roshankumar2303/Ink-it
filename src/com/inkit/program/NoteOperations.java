@@ -1,6 +1,6 @@
 package com.inkit.program;
 
-import java.util.Hashtable;
+import java.util.LinkedHashMap;
 import java.util.Scanner;
 
 /**
@@ -16,39 +16,31 @@ public class NoteOperations {
         Scanner inp = new Scanner(System.in);
 
         Note newNote = new Note();
-        String choice;
 
         // Reading Title of the note
-        System.out.print(ConsoleUI.line(70));
+        TextUI.drawLine(70);
         System.out.print("| TITLE: ");
         newNote.setTitle(inp.nextLine());
 
         // Reading Content of the note
-        System.out.print("| CONTENT " + ConsoleUI.line(60) + "| ");
+        System.out.print("| CONTENT " + TextUI.getLine(60) + "| ");
         newNote.setContent(inp.nextLine());
 
         // Reading To-Do list of the note
-        System.out.print("| TO-DO (Y/n): ");
-        if((inp.nextLine()).equalsIgnoreCase("Y")) {
-            Hashtable<String, Boolean> toDo = new Hashtable<>();
-
-            choice = "y";
-            while (choice.equalsIgnoreCase("Y")) {
+        if(TextUI.yesOrNo("| TO-DO")) {
+            LinkedHashMap<String, Boolean> toDo = new LinkedHashMap<>();
+            do {
                 System.out.print("| * ");
                 String item = inp.nextLine();
 
                 toDo.put(item, false);
-
-                System.out.print("| |-- Add Item (Y/n): ");
-                choice = inp.nextLine();
-            }
+            } while (TextUI.yesOrNo("| |-- Add Item"));
 
             newNote.setToDo(toDo);
         }
 
         // Labels of the note
-        System.out.print("| LABELS (Y/n): ");
-        if((inp.nextLine()).equalsIgnoreCase("Y")) {
+        if(TextUI.yesOrNo("| LABELS")) {
             String newNoteLabel;
 
             System.out.print("| A. Create new Label\n| B. Choose from existing ones\n| Your choice: ");
@@ -68,7 +60,7 @@ public class NoteOperations {
             newNote.setLabels(newNoteLabel);
         }
 
-        System.out.println("== NOTE CREATED " + ConsoleUI.line(54));
+        System.out.println("== NOTE CREATED " + TextUI.getLine(54));
         return newNote;
     }
 
