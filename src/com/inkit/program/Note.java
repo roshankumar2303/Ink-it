@@ -19,7 +19,7 @@ public class Note {
 
     public String getLabel() { return label; }
 
-    public void setLabels(String labels) { this.labels = labels; }
+    public void setLabel(String label) { this.label = label; }
 
     public LinkedHashMap<String, Boolean> getToDo() { return toDo; }
 

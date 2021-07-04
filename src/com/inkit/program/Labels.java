@@ -22,13 +22,25 @@ public class Labels {
 
         /* TEMPORARY */
         allLabels = new LinkedHashMap<>();
-        allLabels.put("School", new ArrayList<String>(){
-            {
-                add("HM");
-                add("SM");
-            }
-        });
 
+
+    }
+
+    /**
+     * This static method is used to create a new Label
+     * @param noteTitle Title of the note
+     * @return The new Label
+     */
+    public static String createLabel(String noteTitle){
+        System.out.println("| Enter new Label:");
+        String newLabel = inp.nextLine();
+        ArrayList<String> titles = new ArrayList<String>(){
+            {
+                    add(noteTitle);
+            }
+        };
+        allLabels.put(newLabel, titles);
+        return newLabel;
     }
 
     /**
@@ -48,13 +60,12 @@ public class Labels {
         // Choosing the label
         String label;
         System.out.println("Enter your choice of label : ");
-        Scanner sc = new Scanner(System.in);
-        label = sc.nextLine();
+        label = inp.nextLine();
 
         // Update Titles array corresponding to the table
-        ArrayList<String> linkedNotes = allLabels.get(label);
-        linkedNotes.add(noteTitle);
-        allLabels.put(label, linkedNotes);
+        ArrayList<String> titles = allLabels.get(label);
+        titles.add(noteTitle);
+        allLabels.put(label, titles);
 
         // Returning Label
         return label;

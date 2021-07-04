@@ -1,5 +1,18 @@
 package com.inkit.program;
 
+import java.sql.Array;
+import java.util.ArrayList;
+
+class TitleOps {
+    ArrayList<String> titles = new ArrayList<>();
+    void addTitle(String title){
+        titles.add(title);
+    }
+    void updateTitlesFile(){
+
+    }
+}
+
 public class Run {
     public static void main(String[] args) {
         Note note1 = NoteOperations.createNote();

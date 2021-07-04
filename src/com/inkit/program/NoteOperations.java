@@ -27,7 +27,7 @@ public class NoteOperations {
         newNote.setContent(inp.nextLine());
 
         // Reading To-Do list of the note
-        if(TextUI.yesOrNo("| TO-DO")) {
+        if(TextUI.yesOrNo("| ADD TO-DO LIST?")) {
             LinkedHashMap<String, Boolean> toDo = new LinkedHashMap<>();
             do {
                 System.out.print("| * ");
