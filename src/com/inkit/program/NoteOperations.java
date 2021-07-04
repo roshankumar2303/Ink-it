@@ -40,24 +40,20 @@ public class NoteOperations {
         }
 
         // Labels of the note
-        if(TextUI.yesOrNo("| LABELS")) {
+        if(TextUI.yesOrNo("| CREATE LABEL?")) {
             String newNoteLabel;
 
-            System.out.print("| A. Create new Label\n| B. Choose from existing ones\n| Your choice: ");
-            if((inp.nextLine()).equalsIgnoreCase("A")) {
-                // Read new label from the user
-                System.out.print("| Enter the label: ");
-                newNoteLabel = inp.nextLine();
-
-                // Update allLabels with the new label
-                Labels.updateLabels(newNoteLabel, newNote.getTitle());
-            }
-            else {
-                // Choose label from the existing ones
-                newNoteLabel = Labels.chooseLabels(newNote.getTitle());
+            if(!Labels.allLabels.isEmpty()) {
+                System.out.print("| A. Create new Label\n| B. Choose from existing ones\n| Your choice: ");
+                if ((inp.nextLine()).equalsIgnoreCase("A")) {
+                    newNoteLabel = Labels.createLabel(newNote.getTitle());
+                } else {
+                    // Choose label from the existing ones
+                    newNoteLabel = Labels.chooseLabels(newNote.getTitle());
+                }
+                newNote.setLabel(newNoteLabel);
             }
 
-            newNote.setLabels(newNoteLabel);
         }
 
         System.out.println("== NOTE CREATED " + TextUI.getLine(54));

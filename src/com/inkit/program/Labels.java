@@ -9,6 +9,7 @@ import java.util.Scanner;
  */
 public class Labels {
 
+    static Scanner inp = new Scanner(System.in);
     /**
      * <p>{@code key: String} - Label</p>
      * <p>{@code value: ArrayList of Strings} - Titles of all the notes under that label</p>
@@ -59,16 +60,4 @@ public class Labels {
         return label;
     }
 
-    /**
-     * This static method updates {@code allLabels} to include the newly created label for the newly created note
-     * @param newLabel The new label which has been created
-     * @param noteTitle The title of the new note which has been created
-     */
-    public static void updateLabels(String newLabel, String noteTitle) {
-        allLabels.put(newLabel, new ArrayList<String>(){
-            {
-                add(noteTitle);
-            }
-        });
-    }
 }

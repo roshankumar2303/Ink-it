@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 public class Note {
     String title;
     String content;
-    String labels;
+    String label;
     LinkedHashMap<String, Boolean> toDo;
 
     /* -------------------- Setters and Getters -------------------- */
@@ -17,7 +17,7 @@ public class Note {
 
     public void setContent(String content) { this.content = content; }
 
-    public String getLabels() { return labels; }
+    public String getLabel() { return label; }
 
     public void setLabels(String labels) { this.labels = labels; }
 
@@ -40,7 +40,7 @@ public class Note {
                 TextUI.formatTodoList(toDo) +
 
                 /* LABELS */
-                "\nLABELS: " + labels + "\n" +
+                "\nLABEL: " + label + "\n" +
                 TextUI.getLine(70);
     }
 }
