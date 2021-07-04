@@ -1,44 +1,42 @@
 package com.inkit.program;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Scanner;
 
 /**
- * {@code Labels} class provides methods to operate on Note labels
+ * {@code Metadata} class provides methods to store and operate on note labels and titles
  */
-public class Labels {
+public class Metadata {
 
     static Scanner inp = new Scanner(System.in);
-    /**
-     * <p>{@code key: String} - Label</p>
-     * <p>{@code value: ArrayList of Strings} - Titles of all the notes under that label</p>
-     */
+
     static LinkedHashMap<String, ArrayList<String>> allLabels;
+    static ArrayList<String> allTitles;
 
     static {
-        // [INCOMPLETE] This static block runs for the first time when "Labels" class has been invoked through a static method
-        // [INCOMPLETE] Retrieve all the labels from the file and store it in "allLabels"
-
+        // [INCOMPLETE] Read all the labels, titles from the files and store it in "allLabels", "allTitles"
         /* TEMPORARY */
         allLabels = new LinkedHashMap<>();
-
-
+        allTitles = new ArrayList<>();
     }
 
+    /*-------------------- METHODS ON "LABELS" -------------------- */
     /**
      * This static method is used to create a new Label
      * @param noteTitle Title of the note
      * @return The new Label
      */
-    public static String createLabel(String noteTitle){
+    public static String createNewLabel(String noteTitle){
         System.out.println("| Enter new Label:");
         String newLabel = inp.nextLine();
-        ArrayList<String> titles = new ArrayList<String>(){
-            {
+
+        ArrayList<String> titles = new ArrayList<String>() {{
                     add(noteTitle);
-            }
-        };
+        }};
+
+        // Updating allLabels
         allLabels.put(newLabel, titles);
         return newLabel;
     }
@@ -69,6 +67,11 @@ public class Labels {
 
         // Returning Label
         return label;
+    }
+
+    /* -------------------- METHODS ON "TITLES" -------------------- */
+    static void addTitle(String title){
+        allTitles.add(title);
     }
 
 }

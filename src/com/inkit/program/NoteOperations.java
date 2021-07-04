@@ -9,10 +9,10 @@ import java.util.Scanner;
 public class NoteOperations {
 
     /**
-     * This static method creates a new {@code Note} and returns it
+     * This method creates a new {@code Note} and returns it
      * @return A {@code Note} object
      */
-    public static Note createNote() {
+    public Note createNote() {
         Scanner inp = new Scanner(System.in);
 
         Note newNote = new Note();
@@ -43,14 +43,19 @@ public class NoteOperations {
         if(TextUI.yesOrNo("| CREATE LABEL?")) {
             String newNoteLabel;
 
-            if(!Labels.allLabels.isEmpty()) {
+            if(!Metadata.allLabels.isEmpty()) {
                 System.out.print("| A. Create new Label\n| B. Choose from existing ones\n| Your choice: ");
                 if ((inp.nextLine()).equalsIgnoreCase("A")) {
-                    newNoteLabel = Labels.createLabel(newNote.getTitle());
+                    newNoteLabel = Metadata.createNewLabel(newNote.getTitle());
                 } else {
                     // Choose label from the existing ones
-                    newNoteLabel = Labels.chooseLabels(newNote.getTitle());
+                    newNoteLabel = Metadata.chooseLabels(newNote.getTitle());
                 }
+                newNote.setLabel(newNoteLabel);
+            }
+            else {
+                System.out.println("| No labels found...");
+                newNoteLabel = Metadata.createNewLabel(newNote.getTitle());
                 newNote.setLabel(newNoteLabel);
             }
 
