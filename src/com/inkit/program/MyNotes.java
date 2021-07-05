@@ -56,26 +56,24 @@ public class MyNotes implements Serializable {
         if(TextUI.yesOrNo("| CREATE LABEL?")) {
             String newNoteLabel;
 
-            if(!Metadata.allLabels.isEmpty()) {
+            if(!md.allLabels.isEmpty()) {
                 System.out.print("| A. Create new Label\n| B. Choose from existing ones\n| Your choice: ");
                 if ((inp.nextLine()).equalsIgnoreCase("A")) {
-                    newNoteLabel = Metadata.createNewLabel(newNote.getTitle());
+                    newNoteLabel = md.createNewLabel(newNote.getTitle());
                 } else {
                     // Choose label from the existing ones
-                    newNoteLabel = Metadata.chooseLabels(newNote.getTitle());
+                    newNoteLabel = md.chooseLabels(newNote.getTitle());
                 }
-                newNote.setLabel(newNoteLabel);
             }
             else {
                 System.out.println("| No labels found...");
-                newNoteLabel = Metadata.createNewLabel(newNote.getTitle());
-                newNote.setLabel(newNoteLabel);
+                newNoteLabel = md.createNewLabel(newNote.getTitle());
             }
-
+            newNote.setLabel(newNoteLabel);
         }
 
         System.out.println("== NOTE CREATED " + TextUI.getLine(54));
-        return newNote;
+        allNotes.put(newNote.getTitle(), newNote);
     }
 
     public void updateTodo(String noteTitle){
