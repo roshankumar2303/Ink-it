@@ -137,7 +137,7 @@ public class TextUI {
         for(String option: options) {
             System.out.println((optNo++) + ". " + option);
         }
-        System.out.println("Enter your option: ");
+        System.out.print("Enter your option: ");
         return Integer.parseInt(inp.nextLine());
     }
 }
