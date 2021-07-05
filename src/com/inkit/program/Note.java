@@ -1,8 +1,9 @@
 package com.inkit.program;
 
+import java.io.Serializable;
 import java.util.LinkedHashMap;
 
-public class Note {
+public class Note implements Serializable {
     String title;
     String content;
     String label;

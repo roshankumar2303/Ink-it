@@ -1,26 +1,23 @@
 package com.inkit.program;
 
+import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Scanner;
 
 /**
  * {@code Metadata} class provides methods to store and operate on note labels and titles
  */
-public class Metadata {
+public class Metadata implements Serializable {
 
     static Scanner inp = new Scanner(System.in);
 
-    static LinkedHashMap<String, ArrayList<String>> allLabels;
-    static ArrayList<String> allTitles;
+    LinkedHashMap<String, ArrayList<String>> allLabels;
 
-    static {
-        // [INCOMPLETE] Read all the labels, titles from the files and store it in "allLabels", "allTitles"
-        /* TEMPORARY */
-        allLabels = new LinkedHashMap<>();
-        allTitles = new ArrayList<>();
+    Metadata(){
+        allLabels = new LinkedHashMap<String, ArrayList<String>>();
     }
+
 
     /*-------------------- METHODS ON "LABELS" -------------------- */
     /**
@@ -28,8 +25,8 @@ public class Metadata {
      * @param noteTitle Title of the note
      * @return The new Label
      */
-    public static String createNewLabel(String noteTitle){
-        System.out.println("| Enter new Label:");
+    public String createNewLabel(String noteTitle){
+        System.out.print("| Enter new Label:");
         String newLabel = inp.nextLine();
 
         ArrayList<String> titles = new ArrayList<String>() {{
@@ -46,7 +43,7 @@ public class Metadata {
      * @param noteTitle Title of the new note which is being created
      * @return label - String containing the chosen Label
      */
-    public static String chooseLabels(String noteTitle) {
+    public String chooseLabels(String noteTitle) {
 
         // Printing all the labels for the user to choose
         int i = 1;
@@ -57,7 +54,7 @@ public class Metadata {
 
         // Choosing the label
         String label;
-        System.out.println("Enter your choice of label : ");
+        System.out.print("Enter your choice of label : ");
         label = inp.nextLine();
 
         // Update Titles array corresponding to the table
@@ -69,9 +66,13 @@ public class Metadata {
         return label;
     }
 
-    /* -------------------- METHODS ON "TITLES" -------------------- */
-    static void addTitle(String title){
-        allTitles.add(title);
+    public ArrayList<String> getLabelTitles(String labelName){
+        return allLabels.get(labelName);
     }
 
+    public ArrayList<String> getLabels(){
+        return new ArrayList<String>() {{
+            addAll(allLabels.keySet());
+        }};
+    }
 }

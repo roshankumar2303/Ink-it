@@ -127,4 +127,17 @@ public class TextUI {
         return (inp.nextLine()).equalsIgnoreCase("Y");
     }
 
+    /**
+     * Ask the user to select one of the options by giving its corresponding number as input
+     * @param options Varargs: The options to be asked
+     * @return Corresponding number to the option chosen by the user
+     */
+    public static int selectOptions(String ...options) {
+        int optNo = 1;
+        for(String option: options) {
+            System.out.println((optNo++) + ". " + option);
+        }
+        System.out.println("Enter your option: ");
+        return Integer.parseInt(inp.nextLine());
+    }
 }

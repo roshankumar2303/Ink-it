@@ -1,18 +1,31 @@
 package com.inkit.program;
 
-import java.util.LinkedHashMap;
-import java.util.Scanner;
+import java.io.Serializable;
+import java.util.*;
 
 /**
  * {@code NoteOperations} class is used to perform operations on {@code Note} objects
  */
-public class NoteOperations {
+public class MyNotes implements Serializable {
+    Metadata md;
+    HashMap<String, Note> allNotes;
 
-    /**
-     * This method creates a new {@code Note} and returns it
-     * @return A {@code Note} object
-     */
-    public Note createNote() {
+    MyNotes(){
+        allNotes = new HashMap<String, Note>();
+        md = new Metadata();
+    }
+
+    public Note getNotes(String title){
+        return allNotes.get(title);
+    }
+
+    public ArrayList<String> getTitles(){
+        return new ArrayList<String>() {{
+            addAll(allNotes.keySet());
+        }};
+    }
+
+    public void createNote() {
         Scanner inp = new Scanner(System.in);
 
         Note newNote = new Note();
@@ -65,7 +78,23 @@ public class NoteOperations {
         return newNote;
     }
 
-    /*
-     * [INCOMPLETE] The next method helps in modifying the given note
-     */
+    public void updateTodo(String noteTitle){
+        Note n1 = allNotes.get(noteTitle);
+        if(n1 == null) {
+            System.out.println("No Matches Found");
+            return;
+        }
+        LinkedHashMap<String, Boolean> toDo = n1.getToDo();
+        System.out.println(TextUI.formatTodoList(toDo));
+        Scanner inp = new Scanner(System.in);
+        boolean f = true;
+        while(f){
+            System.out.println("Which task should be marked as done?");
+            String s = inp.nextLine();
+            toDo.put(s, true);
+            f = TextUI.yesOrNo("Do you want to continue?");
+        }
+        n1.setToDo(toDo);
+        allNotes.replace(noteTitle, n1);
+    }
 }
