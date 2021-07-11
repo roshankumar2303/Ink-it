@@ -10,12 +10,12 @@ import java.util.Scanner;
  */
 public class Metadata implements Serializable {
 
-    Scanner inp = new Scanner(System.in);
+    static Scanner inp = new Scanner(System.in);
 
     LinkedHashMap<String, ArrayList<String>> allLabels;
 
     Metadata(){
-        allLabels = new LinkedHashMap<String, ArrayList<String>>();
+        allLabels = new LinkedHashMap<>();
     }
 
 

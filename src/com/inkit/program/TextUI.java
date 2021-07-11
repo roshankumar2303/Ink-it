@@ -95,7 +95,7 @@ public class TextUI implements Serializable {
         }
         catch (NullPointerException npe) {
             // i.e., There is no to-do list
-            return "Nothing here. Modify this note to add items to the list\n";
+            return "Nothing here... Modify this note to add items to the list\n";
         }
 
         return formatted.toString();
@@ -124,21 +124,21 @@ public class TextUI implements Serializable {
      * @return User's choice as a boolean value
      */
     public static boolean yesOrNo(String question) {
-        System.out.print(question + " " + ANSI_CYAN_BACKGROUND + ANSI_BLACK + " (Y/n) " + ANSI_RESET + " : ");
+        System.out.print(question + " " + ANSI_CYAN_BACKGROUND + ANSI_BLACK + " (Y/n) " + ANSI_RESET + " > ");
         return (inp.nextLine()).equalsIgnoreCase("Y");
     }
 
     /**
-     * Ask the user to select one of the options by giving its corresponding number as input
+     * Displays all the options and asks the user to select one of the options by giving its corresponding number as input
      * @param options Varargs: The options to be asked
      * @return Corresponding number to the option chosen by the user
      */
-    public static int selectOptions(String ...options) {
+    public static int selectFromOptions(String ...options) {
         int optNo = 1;
         for(String option: options) {
-            System.out.println((optNo++) + ". " + option);
+            System.out.print("\n" + (optNo++) + ". " + option);
         }
-        System.out.print("Enter your option: ");
+        System.out.print("\nYour Choice > ");
         return Integer.parseInt(inp.nextLine());
     }
 }

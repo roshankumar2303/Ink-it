@@ -10,8 +10,10 @@ public class MyNotes implements Serializable {
     Metadata md;
     HashMap<String, Note> allNotes;
 
+    public static Scanner inp = new Scanner(System.in);
+
     MyNotes(){
-        allNotes = new HashMap<String, Note>();
+        allNotes = new HashMap<>();
         md = new Metadata();
     }
 
@@ -94,5 +96,71 @@ public class MyNotes implements Serializable {
         }
         n1.setToDo(toDo);
         allNotes.replace(noteTitle, n1);
+    }
+
+    public void searchSuggestions(String query, ArrayList<String> list) {
+        boolean noneFound = true;
+        System.out.println("Couldn't find exact matches. Suggestions below...");
+        for(String title: list) {
+            if(title.contains(query)) {
+                System.out.println("* " + title);
+                noneFound = false;
+            }
+        }
+        if(noneFound)
+            System.out.println("No Matches Found");
+    }
+
+    public Note searchByTitle(String query) {
+        ArrayList<String> titles = getTitles();
+        if(titles.contains(query))
+            return getNotes(query);
+        searchSuggestions(query, titles);
+        return null;
+    }
+
+    public ArrayList<String> searchByLabel(String query) {
+        ArrayList<String> labels = md.getLabels();
+        if(labels.contains(query))
+            return md.getLabelTitles(query);
+        searchSuggestions(query, labels);
+        return null;
+    }
+
+    public Note search() {
+        Note result = null;
+        switch(TextUI.selectFromOptions("Search by Title", "Search by label")) {
+            case 1:
+                while(result == null) {
+                    System.out.println("Enter the title of your note (Press -1 to stop searching): ");
+                    String title = inp.nextLine();
+                    if(title.equalsIgnoreCase("-1"))
+                        return null;
+                    result = searchByTitle(title);
+                }
+                break;
+
+            case 2:
+                while(result == null){
+                    System.out.println("Enter the label of your note (Press -1 to stop searching): ");
+                    String label = inp.nextLine();
+                    if(label.equalsIgnoreCase("-1"))
+                        return null;
+                    ArrayList<String> titles = searchByLabel(label);
+                    if(titles == null)
+                        continue;
+                    int i = 1;
+                    for(String title: titles)
+                        System.out.println((i++) + ". " + title);
+                    System.out.println("Enter your choice of title : ");
+                    String title = inp.nextLine();
+                    result = getNotes(title);
+                }
+                break;
+
+            default:
+                System.out.println("Invalid Input...");
+        }
+        return result;
     }
 }
