@@ -84,7 +84,7 @@ public class MyNotes implements Serializable {
         }
         LinkedHashMap<String, Boolean> toDo = n1.getToDo();
         System.out.println(TextUI.formatTodoList(toDo));
-        Scanner inp = new Scanner(System.in);
+
         boolean f = true;
         while(f){
             System.out.println("Which task should be marked as done?");

@@ -1,11 +1,12 @@
 package com.inkit.program;
 
+import java.io.Serializable;
 import java.util.*;
 
 /**
  * ConsoleUI class provides methods to present content on the Terminal in a better way
  */
-public class TextUI {
+public class TextUI implements Serializable {
 
     static Scanner inp = new Scanner(System.in);
 
