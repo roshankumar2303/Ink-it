@@ -6,6 +6,13 @@ import java.util.Scanner;
 
 public class Run {
 
+    /**
+     * This method is to obtain the {@code MyNotes} object of the user with the given valid credentials, from the DB
+     * @param conn The {@code Connection} Object
+     * @param username Username of the user
+     * @param password Password of the user
+     * @return {@code MyNotes} object, if the credentials match, else {@code null}
+     */
     private static MyNotes getNotesFromDB(Connection conn, String username, String password) throws SQLException, IOException, ClassNotFoundException {
         MyNotes currSession = null;
 
@@ -14,13 +21,15 @@ public class Run {
         ps.setString(2, password);
         ResultSet rs = ps.executeQuery();
 
+        // If the record exists, i.e., Valid username and password
         if(rs.next()) {
             byte[] blobDataInByte = rs.getBytes(3);
 
+            // Using ByteArrayInputStream and ObjectInputStream to read Object from Blob data
             ByteArrayInputStream bais = new ByteArrayInputStream(blobDataInByte);
             ObjectInputStream ois = new ObjectInputStream(bais);
-
             currSession = (MyNotes) ois.readObject();
+
             ois.close();
         }
 
@@ -28,6 +37,13 @@ public class Run {
         return currSession;
     }
 
+    /**
+     * This method is to create a new user with the credentials provided. It creates a new record in the DB, and a new {@code MyNotes} object to operate on, and returns it
+     * @param conn The {@code Connection} Object
+     * @param username Username of the new user
+     * @param password Password of the new user
+     * @return {@code MyNotes} object, newly created for the new user
+     */
     private static MyNotes createUserInDB(Connection conn, String username, String password) throws IOException, SQLException {
         MyNotes newUserSession = new MyNotes();
 
@@ -53,6 +69,12 @@ public class Run {
         }
     }
 
+    /**
+     * This method is to update changes made to the {@code MyNotes} object of the current user, in the DB
+     * @param conn The {@code Connection} object
+     * @param username Username of the current user
+     * @param currSession {@code MyNotes} object of the current user
+     */
     private static void updateNotesToDB(Connection conn, String username, MyNotes currSession) throws IOException, SQLException {
         // Maybe make this method to return a boolean to inform whether database changes were successful
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
@@ -94,7 +116,7 @@ public class Run {
         MyNotes currSession = null;
         String username = null, password = null;
 
-
+        // MAIN MENU
         while(currSession == null) {
             switch (TextUI.selectFromOptions("Create an account", "Login", "Exit")) {
                 // New user
@@ -152,7 +174,9 @@ public class Run {
         5. Change Password
         6. Delete Account
 
-        7. Exit app
+        7. Log Out maybe??????????
+           |-> Which means the control should move back to the Main Menu....
+        8. Exit
         */
         // In every cycle of the menu driven approach, update database....
         updateNotesToDB(conn, username, currSession);
