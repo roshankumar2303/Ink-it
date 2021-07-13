@@ -78,12 +78,7 @@ public class MyNotes implements Serializable {
         allNotes.put(newNote.getTitle(), newNote);
     }
 
-    public void updateTodo(String noteTitle){
-        Note n1 = allNotes.get(noteTitle);
-        if(n1 == null) {
-            System.out.println("No Matches Found");
-            return;
-        }
+    public void updateTodo(Note n1) {
         LinkedHashMap<String, Boolean> toDo = n1.getToDo();
         System.out.println(TextUI.formatTodoList(toDo));
 
@@ -97,6 +92,55 @@ public class MyNotes implements Serializable {
         n1.setToDo(toDo);
         allNotes.replace(noteTitle, n1);
     }
+
+    public void updateContent(Note n1) {
+        System.out.println("Current content in the note...");
+        System.out.println(n1.getContent());
+
+        String newContent = null;
+        switch(TextUI.selectFromOptions("Rewrite Content", "Add Content")) {
+            case 1:
+                    System.out.println("Enter new content...");
+                    newContent = inp.nextLine();
+                    break;
+
+            case 2:
+                    System.out.println("Enter the content you want to add...");
+                    newContent = inp.nextLine();
+                    newContent = n1.getContent() + newContent;
+                    break;
+
+        }
+        n1.setContent(newContent);
+        allNotes.replace(n1.getTitle(), n1);
+    }
+
+    public void update(String noteTitle){
+        Note n1 = allNotes.get(noteTitle);
+        if(n1 == null) {
+            if(TextUI.yesOrNo("No exact matches found. Would you like to search for it?")) {
+                n1 = search();
+                if(n1 == null)
+                    return;
+            }
+            else {
+                System.out.println("Redirecting back to main menu...");
+                return;
+            }
+        }
+        switch(TextUI.selectFromOptions("Edit Content", "Edit To-Do List")){
+            case 1:
+                    updateContent(n1);
+                    break;
+            case 2:
+                    updateTodo(n1);
+                    break;
+        }
+    }
+
+    //
+    // ============================ SEARCHING ============================ //
+    //
 
     public void searchSuggestions(String query, ArrayList<String> list) {
         boolean noneFound = true;

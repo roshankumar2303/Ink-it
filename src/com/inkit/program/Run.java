@@ -159,11 +159,11 @@ public class Run {
         }
 
         // Menu driven system here...
-        System.out.println(currSession.allNotes.get("n1"));
+        // System.out.println(currSession.allNotes.get("n1")); // Temporary...
         /*
-        1. Display all Notes
-        2. Search for note by Lame
-        3. Search for note by Labels
+        1. Create new note
+        2. Display all Titles
+        3. Search
         4. Edit note -> Search(note) -> edit...
            |-> Edit To-Do
            |-> Edit Labels
@@ -178,9 +178,111 @@ public class Run {
            |-> Which means the control should move back to the Main Menu....
         8. Exit
         */
-        // In every cycle of the menu driven approach, update database....
-        updateNotesToDB(conn, username, currSession);
+        String[] options = {
+                "Create Notes",
+                "Display all Titles",
+                "Search Note",
+                "Edit Note",
+                "Delete Note",
+                "Show History",
+                "Change password",
+                "Delete Account and Exit",
+                "Exit Application"
+        };
+        String query;
+        while(true) {
+            switch (TextUI.selectFromOptions(options)) {
+                case 1:
+                    // Creating a new notes
+                    currSession.createNote();
+                    updateNotesToDB(conn, username, currSession);
+                    break;
 
-        conn.close();
+                case 2:
+                    // Displaying all titles
+                    for(String title: currSession.getTitles())
+                        System.out.println(title);
+                    break;
+
+                case 3:
+                    // Search note
+                    Note temp = currSession.search();
+                    if(temp != null)
+                        System.out.println(temp);
+                    break;
+
+                case 4:
+                    // Edit note
+                    System.out.print("Enter the title of the note which is to be updated > ");
+                    query = inp.nextLine();
+                    currSession.update(query);
+                    updateNotesToDB(conn, username, currSession);
+                    break;
+
+                case 5:
+                    // Delete note
+                    System.out.print("Enter the title of the note to be deleted > ");
+                    query = inp.nextLine();
+                    currSession.deleteNote(query);
+                    updateNotesToDB(conn, username, currSession);
+                    break;
+
+                case 6:
+                    currSession.displayHistory();
+                    break;
+
+                case 7:
+                    System.out.print("Enter old password > ");
+                    String oldPass = inp.nextLine();
+                    if(oldPass.equals(password)) {
+                        System.out.print("Enter new password > ");
+                        String newPass = inp.nextLine();
+
+                        if(!newPass.equals(oldPass)) {
+                            password = newPass;
+                            PreparedStatement ps = conn.prepareStatement("UPDATE ink_it_users SET password = ? WHERE username = ?;");
+                            ps.setString(1, newPass);
+                            ps.setString(2, username);
+                            if(ps.executeUpdate() == 1)
+                                System.out.println("Password changed successfully...");
+                            else
+                                System.out.println("Couldn't change password...\nPlease try again later...");
+                        }
+                        else {
+                            System.out.println("New password same as old password...\nPlease change...");
+                        }
+                    }
+                    else {
+                        System.out.println("Password doesn't match...");
+                    }
+                    break;
+
+                case 8:
+                    if(!TextUI.yesOrNo("Are you sure you want to delete the account?"))
+                        break;
+                    System.out.print("Enter password to continue > ");
+                    if((inp.nextLine()).equals(password)){
+                        PreparedStatement ps = conn.prepareStatement("DELETE from ink_it_users WHERE username = ?;");
+                        ps.setString(1, username);
+                        if(ps.executeUpdate() == 1) {
+                            System.out.println("Account Successfully Deleted");
+                            conn.close();
+                            System.exit(0);
+                        }
+                        else
+                            System.out.println("Deletion Unsuccessful...\nPlease try again later...");
+                    }
+                    break;
+
+                case 9:
+                    updateNotesToDB(conn, username, currSession);
+                    conn.close();
+                    System.exit(0);
+
+                default:
+                    System.out.println("Invalid Input...");
+                    break;
+            }
+        }
     }
 }
