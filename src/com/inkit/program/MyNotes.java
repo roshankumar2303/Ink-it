@@ -9,12 +9,14 @@ import java.util.*;
 public class MyNotes implements Serializable {
     Metadata md;
     HashMap<String, Note> allNotes;
+    ArrayList<String> history;
 
     public static Scanner inp = new Scanner(System.in);
 
     MyNotes(){
         allNotes = new HashMap<>();
         md = new Metadata();
+        history = new ArrayList<>();
     }
 
     public Note getNotes(String title){
@@ -82,15 +84,31 @@ public class MyNotes implements Serializable {
         LinkedHashMap<String, Boolean> toDo = n1.getToDo();
         System.out.println(TextUI.formatTodoList(toDo));
 
-        boolean f = true;
-        while(f){
-            System.out.println("Which task should be marked as done?");
-            String s = inp.nextLine();
-            toDo.put(s, true);
-            f = TextUI.yesOrNo("Do you want to continue?");
+        if(toDo != null){
+            boolean f = true;
+            while (f) {
+                System.out.println("Which task should be marked as done?");
+                String s = inp.nextLine();
+                toDo.put(s, true);
+                f = TextUI.yesOrNo("Do you want to continue?");
+            }
+            n1.setToDo(toDo);
+            allNotes.replace(n1.getTitle(), n1);
         }
-        n1.setToDo(toDo);
-        allNotes.replace(noteTitle, n1);
+        else {
+            if(TextUI.yesOrNo("| ADD TO-DO LIST?")) {
+                toDo = new LinkedHashMap<>();
+                do {
+                    System.out.print("| * ");
+                    String item = inp.nextLine();
+
+                    toDo.put(item, false);
+                } while (TextUI.yesOrNo("| |-- Add Item"));
+
+                n1.setToDo(toDo);
+                allNotes.replace(n1.getTitle(), n1);
+            }
+        }
     }
 
     public void updateContent(Note n1) {
@@ -178,8 +196,11 @@ public class MyNotes implements Serializable {
                 while(result == null) {
                     System.out.println("Enter the title of your note (Press -1 to stop searching): ");
                     String title = inp.nextLine();
-                    if(title.equalsIgnoreCase("-1"))
+                    history.add(title);
+                    if(title.equalsIgnoreCase("-1")) {
+                        System.out.println("Search Stopped Successfully");
                         return null;
+                    }
                     result = searchByTitle(title);
                 }
                 break;
@@ -188,8 +209,10 @@ public class MyNotes implements Serializable {
                 while(result == null){
                     System.out.println("Enter the label of your note (Press -1 to stop searching): ");
                     String label = inp.nextLine();
-                    if(label.equalsIgnoreCase("-1"))
+                    if(label.equalsIgnoreCase("-1")) {
+                        System.out.println("Search Stopped Successfully");
                         return null;
+                    }
                     ArrayList<String> titles = searchByLabel(label);
                     if(titles == null)
                         continue;
@@ -198,6 +221,7 @@ public class MyNotes implements Serializable {
                         System.out.println((i++) + ". " + title);
                     System.out.println("Enter your choice of title : ");
                     String title = inp.nextLine();
+                    history.add(title);
                     result = getNotes(title);
                 }
                 break;
@@ -206,5 +230,20 @@ public class MyNotes implements Serializable {
                 System.out.println("Invalid Input...");
         }
         return result;
+    }
+
+    public void deleteNote(String noteTitle){
+        if(!allNotes.containsKey(noteTitle)){
+            System.out.println("No Matches Found");
+            return;
+        }
+        allNotes.remove(noteTitle);
+        System.out.println("Deletion Successful");
+    }
+
+    public void displayHistory(){
+        int i = 1;
+        for(String title : history)
+            System.out.println((i++) + ". " + title);
     }
 }
