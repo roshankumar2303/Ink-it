@@ -170,27 +170,6 @@ public class Run {
             }
         }
 
-        // Menu driven system below...
-        // System.out.println(currSession.allNotes.get("n1")); // Temporary...
-        /*
-        1. Create new note
-        2. Display all Titles
-        3. Search
-        4. Edit note -> Search(note) -> edit...
-           |-> Edit To-Do
-           |-> Edit Labels
-           |-> Edit Content
-           |-> Edit Title
-
-        Account Options
-        5. Change Password
-        6. Delete Account
-
-        7. Log Out maybe??????????
-           |-> Which means the control should move back to the Main Menu....
-        8. Exit
-        */
-
         String[] options = {
                 "Create Notes",
                 "Display all Titles",

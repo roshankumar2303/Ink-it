@@ -29,6 +29,9 @@ public class MyNotes implements Serializable {
         }};
     }
 
+    /**
+     * Create a new note for the particular user
+     */
     public void createNote() {
         Scanner inp = new Scanner(System.in);
 
@@ -134,6 +137,10 @@ public class MyNotes implements Serializable {
         }
     }
 
+    /**
+     * Update content of the note
+     * @param n1 The {@code Note} object whose content is to be updated
+     */
     public void updateContent(Note n1) {
         System.out.println("Current content in the note...");
         System.out.println(n1.getContent());
@@ -156,6 +163,10 @@ public class MyNotes implements Serializable {
         allNotes.replace(n1.getTitle(), n1);
     }
 
+    /**
+     * Update content or to-do list of a particular note
+     * @param noteTitle The title of the note whose content is to be updated
+     */
     public void update(String noteTitle){
         Note n1 = allNotes.get(noteTitle);
         if(n1 == null) {

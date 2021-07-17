@@ -118,7 +118,11 @@ public class TextUI implements Serializable {
         System.out.println(new String(new char[len]).replace('\0', '='));
     }
 
-
+    /**
+     * Print a message with lines of particular length above and below it
+     * @param message The message to be printed
+     * @param lineLen The line length
+     */
     public static void highlight(String message, int lineLen) {
         System.out.print("\n");
         drawLine(lineLen);
