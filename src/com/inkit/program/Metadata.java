@@ -26,7 +26,7 @@ public class Metadata implements Serializable {
      * @return The new Label
      */
     public String createNewLabel(String noteTitle){
-        System.out.print("| Enter new Label:");
+        System.out.print("Enter new Label > ");
         String newLabel = inp.nextLine();
 
         ArrayList<String> titles = new ArrayList<String>() {{
@@ -47,14 +47,14 @@ public class Metadata implements Serializable {
 
         // Printing all the labels for the user to choose
         int i = 1;
-        System.out.println("-- CHOOSE LABELS FROM THE BELOW ONES ----------");
+        System.out.println("CHOOSE LABELS FROM THE BELOW ONES");
         for(String label: allLabels.keySet()) {
             System.out.println((i++) + " --> " + label);
         }
 
         // Choosing the label
         String label;
-        System.out.print("Enter your choice of label : ");
+        System.out.print("Enter your choice of label > ");
         label = inp.nextLine();
 
         // Update Titles array corresponding to the table
@@ -66,7 +66,7 @@ public class Metadata implements Serializable {
         return label;
     }
 
-    public ArrayList<String> getLabelTitles(String labelName){
+    public ArrayList<String> getTitlesUnderLabel(String labelName){
         return allLabels.get(labelName);
     }
 

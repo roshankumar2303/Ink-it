@@ -73,20 +73,20 @@ public class TextUI implements Serializable {
 
     /**
      * Returns the to-do list as a String
-     * @param toDo To-Do list as a Hashtable
+     * @param to_do To-Do list as a Hashtable
      * @return String which contains a print-able To-Do list
      */
-    public static String formatTodoList(LinkedHashMap<String, Boolean> toDo) {
+    public static String formatTodoList(LinkedHashMap<String, Boolean> to_do) {
         StringBuilder formatted = new StringBuilder();
 
         try {
-            Set<String> todoItems = toDo.keySet();
+            Set<String> todoItems = to_do.keySet();
             for(String item: todoItems) {
                 // Adding the to-do list item
                 formatted.append(item).append(" - ");
 
                 // Adding the status of the to-do list item
-                if (toDo.get(item))
+                if (to_do.get(item))
                     formatted.append("✔");
                 else
                     formatted.append("❌");
@@ -118,6 +118,14 @@ public class TextUI implements Serializable {
         System.out.println(new String(new char[len]).replace('\0', '='));
     }
 
+
+    public static void highlight(String message, int lineLen) {
+        System.out.print("\n");
+        drawLine(lineLen);
+        System.out.println(message);
+        drawLine(lineLen);
+    }
+
     /**
      * Ask the user a YES (or) NO question. Reads the user's choice and returns it as a boolean
      * @param question The question being asked
@@ -136,8 +144,9 @@ public class TextUI implements Serializable {
     public static int selectFromOptions(String ...options) {
         int optNo = 1;
         for(String option: options) {
-            System.out.print("\n" + (optNo++) + ". " + option);
+            System.out.println((optNo++) + ". " + option);
         }
+
         System.out.print("\nYour Choice > ");
         return Integer.parseInt(inp.nextLine());
     }

@@ -38,38 +38,6 @@ public class Run {
     }
 
     /**
-     * This method is to create a new user with the credentials provided. It creates a new record in the DB, and a new {@code MyNotes} object to operate on, and returns it
-     * @param conn The {@code Connection} Object
-     * @param username Username of the new user
-     * @param password Password of the new user
-     * @return {@code MyNotes} object, newly created for the new user
-     */
-    private static MyNotes createUserInDB(Connection conn, String username, String password) throws IOException, SQLException {
-        MyNotes newUserSession = new MyNotes();
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(baos);
-
-        oos.writeObject(newUserSession);
-        byte[] objectDataInByte = baos.toByteArray();
-
-        PreparedStatement ps = conn.prepareStatement("INSERT INTO ink_it_users VALUES(?, ?, ?);");
-        ps.setString(1, username);
-        ps.setString(2, password);
-        ps.setBinaryStream(3, new ByteArrayInputStream(objectDataInByte));
-
-        if(ps.executeUpdate() == 1) {
-            ps.close();
-            return newUserSession;
-        }
-        else {
-            ps.close();
-            System.out.println("Couldn't create new user");
-            return null;
-        }
-    }
-
-    /**
      * This method is to update changes made to the {@code MyNotes} object of the current user, in the DB
      * @param conn The {@code Connection} object
      * @param username Username of the current user
@@ -88,12 +56,53 @@ public class Run {
         ps.setString(2, username);
 
         if(ps.executeUpdate() == 1) {
-            System.out.println("Changes successfully reflected in DB...");
+            System.out.println("\nChanges successfully reflected in DB...");
         }
         else {
-            System.out.println("Error in updating changes to DB...");
+            System.out.println("\nError in updating changes to DB...");
         }
         ps.close();
+    }
+
+    /**
+     * This method is to create a new user with the credentials provided. It creates a new record in the DB, and a new {@code MyNotes} object to operate on, and returns it
+     * @param conn The {@code Connection} Object
+     * @param username Username of the new user
+     * @param password Password of the new user
+     * @return {@code MyNotes} object, newly created for the new user, or {@code null} if user already exists
+     */
+    private static MyNotes createUserInDB(Connection conn, String username, String password) throws IOException, SQLException {
+        MyNotes newUserSession = new MyNotes();
+
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+
+            oos.writeObject(newUserSession);
+            byte[] objectDataInByte = baos.toByteArray();
+
+            PreparedStatement ps = conn.prepareStatement("INSERT INTO ink_it_users VALUES(?, ?, ?);");
+            ps.setString(1, username);
+            ps.setString(2, password);
+            ps.setBinaryStream(3, new ByteArrayInputStream(objectDataInByte));
+
+            ps.executeUpdate();
+            ps.close();
+        }
+        catch(SQLIntegrityConstraintViolationException userExists) {
+            return null;
+        }
+        return newUserSession;
+    }
+
+    private static void updatePwdInDB(Connection conn, String username, String newPass) throws SQLException {
+        PreparedStatement ps = conn.prepareStatement("UPDATE ink_it_users SET password = ? WHERE username = ?;");
+        ps.setString(1, newPass);
+        ps.setString(2, username);
+        if(ps.executeUpdate() == 1)
+            System.out.println("Password changed successfully...");
+        else
+            System.out.println("Couldn't change password...\nPlease try again later...");
     }
 
     public static void main(String[] args) throws ClassNotFoundException, SQLException, IOException {
@@ -111,17 +120,18 @@ public class Run {
         Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/ink_it", "root", "root");
         System.out.println("Connected to Database...");
 
+        // Credentials and MyNotes Object of the particular user
         Scanner inp = new Scanner(System.in);
-
         MyNotes currSession = null;
         String username = null, password = null;
 
-        // MAIN MENU
+        // USER-SELECT MENU
         while(currSession == null) {
             switch (TextUI.selectFromOptions("Create an account", "Login", "Exit")) {
-                // New user
+                // 1. Creating a new user
                 case 1:
-                    System.out.print("\nEnter new username > ");
+                    TextUI.highlight("NEW USER", 70);
+                    System.out.print("Enter new username > ");
                     username = inp.nextLine();
                     System.out.print("Enter new password > ");
                     password = inp.nextLine();
@@ -130,12 +140,13 @@ public class Run {
                     if(currSession != null)
                         System.out.println("\nNew user created successfully\nWelcome, " + username);
                     else
-                        System.out.println("\nRedirecting back to Main menu...");
+                        System.out.println("\nUser already exists\nRedirecting back to User-Select menu...");
                     break;
 
-                // Existing user
+                // 2. Login for an existing user
                 case 2:
-                    System.out.print("\nEnter username > ");
+                    TextUI.highlight("LOGIN", 70);
+                    System.out.print("Enter username > ");
                     username = inp.nextLine();
                     System.out.print("Enter password > ");
                     password = inp.nextLine();
@@ -144,21 +155,22 @@ public class Run {
                     if(currSession != null)
                         System.out.println("\nLogin successful\nWelcome back, " + username);
                     else
-                        System.out.println("\nLogin unsuccessful\nRedirecting back to Main Menu...");
+                        System.out.println("\nInvalid Credentials\nRedirecting back to User-Select Menu...");
                     break;
 
-                // Closing Application
+                // 3. Exit application
                 case 3:
-                    System.out.println("Closing application...");
+                    System.out.println("Exiting application...");
                     System.exit(0);
 
+                // Invalid input
                 default:
-                    System.out.println("Invalid input\nRedirecting back to Main Menu...");
+                    System.out.println("Invalid input\nRedirecting back to User-Select Menu...");
                     break;
             }
         }
 
-        // Menu driven system here...
+        // Menu driven system below...
         // System.out.println(currSession.allNotes.get("n1")); // Temporary...
         /*
         1. Create new note
@@ -178,6 +190,7 @@ public class Run {
            |-> Which means the control should move back to the Main Menu....
         8. Exit
         */
+
         String[] options = {
                 "Create Notes",
                 "Display all Titles",
@@ -191,37 +204,48 @@ public class Run {
                 "Exit Application"
         };
         String query;
+
         while(true) {
+            TextUI.highlight("MAIN MENU", 70);
             switch (TextUI.selectFromOptions(options)) {
+                // 1. Creating a New Note
                 case 1:
-                    // Creating a new notes
+                    TextUI.highlight("NEW NOTE", 70);
                     currSession.createNote();
                     updateNotesToDB(conn, username, currSession);
                     break;
 
+                // 2. Displaying all the titles
                 case 2:
-                    // Displaying all titles
-                    for(String title: currSession.getTitles())
-                        System.out.println(title);
+                    TextUI.highlight("ALL NOTES", 70);
+                    if(currSession.getTitles().isEmpty())
+                        System.out.println("No Notes found to display");
+                    else {
+                        for (String title : currSession.getTitles())
+                            System.out.println(title);
+                    }
                     break;
 
+                // 3. Search for Note
                 case 3:
-                    // Search note
+                    TextUI.highlight("SEARCH", 70);
                     Note temp = currSession.search();
                     if(temp != null)
                         System.out.println(temp);
                     break;
 
+                // Edit note
                 case 4:
-                    // Edit note
+                    TextUI.highlight("EDIT NOTES", 70);
                     System.out.print("Enter the title of the note which is to be updated > ");
                     query = inp.nextLine();
                     currSession.update(query);
                     updateNotesToDB(conn, username, currSession);
                     break;
 
+                // Delete note
                 case 5:
-                    // Delete note
+                    TextUI.highlight("DELETE NOTE", 70);
                     System.out.print("Enter the title of the note to be deleted > ");
                     query = inp.nextLine();
                     currSession.deleteNote(query);
@@ -229,6 +253,7 @@ public class Run {
                     break;
 
                 case 6:
+                    TextUI.highlight("HISTORY", 70);
                     currSession.displayHistory();
                     break;
 
@@ -242,24 +267,19 @@ public class Run {
                     // Read old password again
                     System.out.print("\nTo proceed changing the password\nPlease enter your old password > ");
                     String oldPass = inp.nextLine();
+
+                    // Enters valid password: Allow changing password
                     if(oldPass.equals(password)) {
                         System.out.print("Enter new password > ");
                         String newPass = inp.nextLine();
-
                         if(!newPass.equals(oldPass)) {
                             password = newPass;
-                            PreparedStatement ps = conn.prepareStatement("UPDATE ink_it_users SET password = ? WHERE username = ?;");
-                            ps.setString(1, newPass);
-                            ps.setString(2, username);
-                            if(ps.executeUpdate() == 1)
-                                System.out.println("Password changed successfully...");
-                            else
-                                System.out.println("Couldn't change password...\nPlease try again later...");
+                            updatePwdInDB(conn, username, newPass);
                         }
-                        else {
+                        else
                             System.out.println("New password same as old password...\nPlease change...");
-                        }
                     }
+                    // Enters invalid password: Deny changing password
                     else {
                         System.out.println("Password doesn't match...");
                     }
@@ -274,8 +294,8 @@ public class Run {
                         PreparedStatement ps = conn.prepareStatement("DELETE from ink_it_users WHERE username = ?;");
                         ps.setString(1, username);
                         if(ps.executeUpdate() == 1) {
-                            System.out.println("Account Successfully Deleted");
                             conn.close();
+                            System.out.println("Account Successfully Deleted...\nExiting application...");
                             System.exit(0);
                         }
                         else
@@ -286,6 +306,7 @@ public class Run {
                 case 10:
                     updateNotesToDB(conn, username, currSession);
                     conn.close();
+                    System.out.println("\nExiting application...");
                     System.exit(0);
 
                 default:

@@ -35,48 +35,48 @@ public class MyNotes implements Serializable {
         Note newNote = new Note();
 
         // Reading Title of the note
-        TextUI.drawLine(70);
-        System.out.print("| TITLE: ");
+        System.out.print("TITLE > ");
         newNote.setTitle(inp.nextLine());
+        TextUI.drawLine(70);
 
         // Reading Content of the note
-        System.out.print("| CONTENT " + TextUI.getLine(60) + "| ");
+        System.out.print("CONTENT\n");
         newNote.setContent(inp.nextLine());
+        TextUI.drawLine(70);
 
         // Reading To-Do list of the note
-        if(TextUI.yesOrNo("| ADD TO-DO LIST?")) {
+        if(TextUI.yesOrNo("ADD TO-DO LIST?")) {
             LinkedHashMap<String, Boolean> toDo = new LinkedHashMap<>();
             do {
-                System.out.print("| * ");
+                System.out.print("* ");
                 String item = inp.nextLine();
 
                 toDo.put(item, false);
-            } while (TextUI.yesOrNo("| |-- Add Item"));
+            }
+            while (TextUI.yesOrNo("|-- Add Another Item"));
 
             newNote.setToDo(toDo);
         }
+        TextUI.drawLine(70);
 
         // Labels of the note
-        if(TextUI.yesOrNo("| CREATE LABEL?")) {
+        if(TextUI.yesOrNo("CREATE LABEL?")) {
             String newNoteLabel;
 
             if(!md.allLabels.isEmpty()) {
-                System.out.print("| A. Create new Label\n| B. Choose from existing ones\n| Your choice: ");
-                if ((inp.nextLine()).equalsIgnoreCase("A")) {
+                if(TextUI.selectFromOptions("Create new Label", "Choose from existing ones") == 1)
                     newNoteLabel = md.createNewLabel(newNote.getTitle());
-                } else {
-                    // Choose label from the existing ones
+                else
                     newNoteLabel = md.chooseLabels(newNote.getTitle());
-                }
             }
             else {
-                System.out.println("| No labels found...");
+                System.out.println("No labels found...");
                 newNoteLabel = md.createNewLabel(newNote.getTitle());
             }
             newNote.setLabel(newNoteLabel);
         }
 
-        System.out.println("== NOTE CREATED " + TextUI.getLine(54));
+        TextUI.highlight("NOTE CREATED", 70);
         allNotes.put(newNote.getTitle(), newNote);
     }
 
@@ -86,12 +86,34 @@ public class MyNotes implements Serializable {
 
         if(toDo != null){
             boolean f = true;
-            while (f) {
-                System.out.println("Which task should be marked as done?");
-                String s = inp.nextLine();
-                toDo.put(s, true);
-                f = TextUI.yesOrNo("Do you want to continue?");
+            switch(TextUI.selectFromOptions("Mark task as done", "Add new task")) {
+                case 1:
+                    while (f) {
+                        System.out.println(TextUI.formatTodoList(toDo));
+                        System.out.println("Which task should be marked as done?");
+                        String s = inp.nextLine();
+                        if(toDo.containsKey(s))
+                            toDo.put(s, true);
+                        else
+                            System.out.println("ToDo list doesn't contain task \"" + s + "\"");
+                        f = TextUI.yesOrNo("Do you want to continue?");
+                    }
+                    break;
+
+                case 2:
+                    while (f) {
+                        System.out.print("Enter the task >");
+                        String s = inp.nextLine();
+                        toDo.put(s, false);
+                        f = TextUI.yesOrNo("Do you want to continue?");
+                    }
+                    break;
+
+                default:
+                    System.out.println("Invalid input...");
+                    break;
             }
+            System.out.println(TextUI.formatTodoList(toDo));
             n1.setToDo(toDo);
             allNotes.replace(n1.getTitle(), n1);
         }
@@ -106,6 +128,7 @@ public class MyNotes implements Serializable {
                 } while (TextUI.yesOrNo("| |-- Add Item"));
 
                 n1.setToDo(toDo);
+                System.out.println(TextUI.formatTodoList(toDo));
                 allNotes.replace(n1.getTitle(), n1);
             }
         }
@@ -141,10 +164,8 @@ public class MyNotes implements Serializable {
                 if(n1 == null)
                     return;
             }
-            else {
-                System.out.println("Redirecting back to main menu...");
+            else
                 return;
-            }
         }
         switch(TextUI.selectFromOptions("Edit Content", "Edit To-Do List")){
             case 1:
@@ -162,15 +183,15 @@ public class MyNotes implements Serializable {
 
     public void searchSuggestions(String query, ArrayList<String> list) {
         boolean noneFound = true;
-        System.out.println("Couldn't find exact matches. Suggestions below...");
+        System.out.println("Couldn't find exact matches\nFinding similar matches");
         for(String title: list) {
-            if(title.contains(query)) {
+            if(title.toLowerCase().contains(query.toLowerCase())) {
                 System.out.println("* " + title);
                 noneFound = false;
             }
         }
         if(noneFound)
-            System.out.println("No Matches Found");
+            System.out.println("No Matches Found. Try something else");
     }
 
     public Note searchByTitle(String query) {
@@ -184,45 +205,63 @@ public class MyNotes implements Serializable {
     public ArrayList<String> searchByLabel(String query) {
         ArrayList<String> labels = md.getLabels();
         if(labels.contains(query))
-            return md.getLabelTitles(query);
+            return md.getTitlesUnderLabel(query);
         searchSuggestions(query, labels);
         return null;
     }
 
+    /**
+     * Search for a note, either by title, or by label.
+     * @return Returns the {@code Note} object if required note is found, else {@code null}
+     */
     public Note search() {
         Note result = null;
         switch(TextUI.selectFromOptions("Search by Title", "Search by label")) {
+            // 1. Search by Title
             case 1:
                 while(result == null) {
-                    System.out.println("Enter the title of your note (Press -1 to stop searching): ");
+                    // Read search term (Will be compared with titles)
+                    System.out.print("Enter search term (-1 to stop searching) > ");
                     String title = inp.nextLine();
+
+                    // Add search term to history
                     history.add(title);
+
+                    // Return null if user chose to exit search
                     if(title.equalsIgnoreCase("-1")) {
-                        System.out.println("Search Stopped Successfully");
+                        System.out.println("Search Stopped...");
                         return null;
                     }
+
+                    // Performing Search by Title
                     result = searchByTitle(title);
                 }
                 break;
 
+            // 2. Search by Label
             case 2:
-                while(result == null){
-                    System.out.println("Enter the label of your note (Press -1 to stop searching): ");
+                while(result == null) {
+                    // Read search term (Will be compared with labels)
+                    System.out.print("Enter search term (-1 to stop searching) > ");
                     String label = inp.nextLine();
+
+                    // Return null if user chose to exit search
                     if(label.equalsIgnoreCase("-1")) {
-                        System.out.println("Search Stopped Successfully");
+                        System.out.println("Search Stopped...");
                         return null;
                     }
+
+                    // Performing search by label. For more info, see method description
                     ArrayList<String> titles = searchByLabel(label);
+
+                    // No perfect match of labels; Continue
                     if(titles == null)
                         continue;
-                    int i = 1;
-                    for(String title: titles)
-                        System.out.println((i++) + ". " + title);
-                    System.out.println("Enter your choice of title : ");
-                    String title = inp.nextLine();
-                    history.add(title);
-                    result = getNotes(title);
+
+                    // Selecting a note from titles of all notes under that label
+                    String noteTitle = titles.get(TextUI.selectFromOptions(titles.toArray(new String[0])));
+                    history.add(noteTitle);
+                    result = getNotes(noteTitle);
                 }
                 break;
 
