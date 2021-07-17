@@ -185,6 +185,7 @@ public class Run {
                 "Edit Note",
                 "Delete Note",
                 "Show History",
+                "Clear History",
                 "Change password",
                 "Delete Account and Exit",
                 "Exit Application"
@@ -232,7 +233,14 @@ public class Run {
                     break;
 
                 case 7:
-                    System.out.print("Enter old password > ");
+                    TextUI.highlight("CLEAR HISTORY", 70);
+                    currSession.clearHistory();
+                    break;
+
+                case 8:
+                    TextUI.highlight("CHANGE PASSWORD", 70);
+                    // Read old password again
+                    System.out.print("\nTo proceed changing the password\nPlease enter your old password > ");
                     String oldPass = inp.nextLine();
                     if(oldPass.equals(password)) {
                         System.out.print("Enter new password > ");
@@ -257,8 +265,9 @@ public class Run {
                     }
                     break;
 
-                case 8:
-                    if(!TextUI.yesOrNo("Are you sure you want to delete the account?"))
+                case 9:
+                    TextUI.highlight("DELETE ACCOUNT", 70);
+                    if(!TextUI.yesOrNo("Are you sure you want to delete the account ? (irreversible)"))
                         break;
                     System.out.print("Enter password to continue > ");
                     if((inp.nextLine()).equals(password)){
@@ -274,7 +283,7 @@ public class Run {
                     }
                     break;
 
-                case 9:
+                case 10:
                     updateNotesToDB(conn, username, currSession);
                     conn.close();
                     System.exit(0);

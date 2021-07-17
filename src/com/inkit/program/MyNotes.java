@@ -246,4 +246,19 @@ public class MyNotes implements Serializable {
         for(String title : history)
             System.out.println((i++) + ". " + title);
     }
+
+    public void clearHistory(){
+        switch(TextUI.selectFromOptions("Choose and Clear", "Clear All")){
+            case 1:
+                displayHistory();
+                System.out.print("Select the entry to be cleared > ");
+                int choice = Integer.parseInt(inp.nextLine());
+                history.remove(choice - 1);
+                System.out.println("Your entry has been cleared from history");
+                break;
+            case 2:
+                history.clear();
+                System.out.println("Entire history cleared successfully");
+        }
+    }
 }
