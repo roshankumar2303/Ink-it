@@ -29,6 +29,7 @@ public class Note implements Serializable {
     @Override
     public String toString() {
         return  /* TITLE */
+                "\n" +
                 TextUI.getLine(70) +
                 TextUI.textWrap(title, 70) +
                 TextUI.getLine(70) +

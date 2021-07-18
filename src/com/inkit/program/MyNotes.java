@@ -270,7 +270,7 @@ public class MyNotes implements Serializable {
                         continue;
 
                     // Selecting a note from titles of all notes under that label
-                    String noteTitle = titles.get(TextUI.selectFromOptions(titles.toArray(new String[0])));
+                    String noteTitle = titles.get(TextUI.selectFromOptions(titles.toArray(new String[0])) - 1);
                     history.add(noteTitle);
                     result = getNotes(noteTitle);
                 }
